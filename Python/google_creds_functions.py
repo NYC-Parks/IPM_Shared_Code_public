@@ -1,3 +1,5 @@
+import json
+
 def create_assertion_session(conf_file, scopes, subject=None):
     with open(conf_file, 'r') as f:
         conf = json.load(f)
