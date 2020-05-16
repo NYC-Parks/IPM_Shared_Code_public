@@ -5,7 +5,7 @@ import numpy as np
 
 #This function provides the ability to update SQL updates from pandas dataframes using the SQLAlchemy API
 def sql_update(df, sql_table, engine, where_col, exclude_cols = None):
-    
+
     #Check if the primary key (where_col) parameter is a single column (string) or a multi-column
     #composite key (list). Set the suffixes of the keys for parameter mapping.
     where_suffix = '__df'
