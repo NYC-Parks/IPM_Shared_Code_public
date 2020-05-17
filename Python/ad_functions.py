@@ -1,8 +1,8 @@
 import pyad.adquery
 
-def ad_query(basedn, attributes, where_clause):
+def ad_query(base_dn, attributes, where_clause):
 
-    if isinstance(basedn, str) == False:
+    if isinstance(base_dn, str) == False:
         raise Exception('The basedn parameter must be a string')
 
     if isinstance(attributes, list) == False:
