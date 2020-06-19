@@ -43,10 +43,13 @@ def open_google_worksheet(cred_file, sheet_name, worksheet_name):
 
     return ws
 
-def read_google_sheet(cred_file, sheet_name, worksheet_name, evaluate_formulas = True, header = None, **options):
+def read_google_sheet(cred_file, sheet_name, worksheet_name, evaluate_formulas = True, header = None, drop_empty_cols = True, **options):
 
     #if not isinstance(evaluate_formulas, bool):
     #    raise TypeError('evaluate_formulas must be a boolean or True/False value')
+
+    if not isinstance(drop_empty_cols, bool):
+        raise TypeError('drop_empty_cols must be a boolean or True/False value')
 
     #Obtain and authorize the google api credentials, then connect to the specific worksheet
     ws = open_google_worksheet(cred_file, sheet_name, worksheet_name)
@@ -56,15 +59,16 @@ def read_google_sheet(cred_file, sheet_name, worksheet_name, evaluate_formulas =
     #https://pythonhosted.org/gspread-dataframe/
     google_df = get_as_dataframe(ws, evaluate_formulas = evaluate_formulas, header= header, **options)
 
-    #Define the regular expression to identify the columns with no data (named Unnamed: n)
-    r = re.compile('^Unnamed:.')
+    if drop_empty_cols = True:
+        #Define the regular expression to identify the columns with no data (named Unnamed: n)
+        r = re.compile('^Unnamed:.')
 
-    #Find the columns matching the above expression and add them to a list
-    drop_cols = [col for col in list(google_df.columns.values) if re.match(r, col) != None]
+        #Find the columns matching the above expression and add them to a list
+        drop_cols = [col for col in list(google_df.columns.values) if re.match(r, col) != None]
 
-    #Drop the columns (in place) with no data if they exist
-    if len(drop_cols) > 0:
-        google_df.drop(columns = drop_cols, inplace = True)
+        #Drop the columns (in place) with no data if they exist
+        if len(drop_cols) > 0:
+            google_df.drop(columns = drop_cols, inplace = True)
 
     return google_df
 
