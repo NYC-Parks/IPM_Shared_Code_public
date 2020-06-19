@@ -59,7 +59,7 @@ def read_google_sheet(cred_file, sheet_name, worksheet_name, evaluate_formulas =
     #https://pythonhosted.org/gspread-dataframe/
     google_df = get_as_dataframe(ws, evaluate_formulas = evaluate_formulas, header= header, **options)
 
-    if drop_empty_cols = True:
+    if drop_empty_cols == True:
         #Define the regular expression to identify the columns with no data (named Unnamed: n)
         r = re.compile('^Unnamed:.')
 
