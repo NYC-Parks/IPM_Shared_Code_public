@@ -96,3 +96,35 @@ def sql_update(df, sql_table, engine, where_col, exclude_cols = None):
         con.close()
         #Should probably consider returning a message of success with a row count
         #return([param_dict, values])
+
+#This function provides the ability to insert into SQL from pandas dataframes using the SQLAlchemy API, while eventually providing a sometimes needed alternative to to_sql
+def sql_insert(df, sql_table, engine, exclude_cols):
+    #Connect to the engine
+    con = engine.connect()
+    
+    #Create the Metadata object
+    meta = sqlalchemy.MetaData(con)
+    
+    #Reflect the schema of the sql_table to the meta object
+    meta.reflect(only = [sql_table], views = True)
+    
+    #Connect to the table object
+    tbl = sqlalchemy.Table(sql_table, meta)
+    
+    if exclude_cols == None:
+        df = (df.copy()
+              .replace({pd.np.nan: sqlalchemy.null()}))
+    else: 
+          df = (df.copy()
+          .drop(columns = exclude_cols)
+          .replace({pd.np.nan: sqlalchemy.null()}))
+    
+    values = [dict(v) for i, v in df.iterrows()]
+    #Create the SQL DML object
+    sql = tbl.insert().values(values)
+    
+    #Excute the SQL DML object
+    con.execute(sql)
+    
+    #con.commit()
+    con.close()
