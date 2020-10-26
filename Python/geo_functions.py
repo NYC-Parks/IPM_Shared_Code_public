@@ -2,6 +2,7 @@ import binascii
 
 from pandas import read_sql
 import shapely.wkb
+from pyproj import CRS
 
 from geopandas import GeoSeries, GeoDataFrame
 import re
@@ -113,7 +114,8 @@ def read_mssql(sql, #SQL Statement used to pull data
     #Define the projection as New York Long Island (ftUS) since all Parks data is in this projection.
     #http://www.spatialreference.org/ref/epsg/2263/
     if crs is None:
-        crs = {'init' :'epsg:2263'}
+        crs = CRS("EPSG:2263")
+        # {'init' :'epsg:2263'}
         print ('Note: No Coordinate Reference System (CRS) was specified! The CRS was set to ' + crs.values()[0] + 
               ', New York Long Island (ftUS).')
         
@@ -192,6 +194,7 @@ def read_geosql(sql, #SQL Statement used to pull data
     #Define the projection as New York Long Island (ftUS) since all Parks data is in this projection.
     #http://www.spatialreference.org/ref/epsg/2263/
     if crs is None:
-        crs = {'init' :'epsg:2263'}
+        crs = CRS("EPSG:2263")
+        # {'init' :'epsg:2263'}
 
     return GeoDataFrame(df, crs=crs, geometry=geom_col)
